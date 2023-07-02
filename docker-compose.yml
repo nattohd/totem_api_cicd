@@ -1,0 +1,35 @@
+services:
+  bd:
+    container_name: bd
+    image: mysql:5.7
+    ports:
+      - 33306:3306
+    environment:
+      - "MYSQL_ROOT_PASSWORD=123456"
+      - "MYSQL_USER=api_user"
+      - "MYSQL_DATABASE=totem"
+      - "MYSQL_PASSWORD=123456"
+    volumes:
+      - db-volume:/var/lib/mysql
+      - ./totem.sql:/docker-entrypoint-initdb.d/1.sql
+    networks:
+      - totem-network
+  api:
+    container_name: api
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: totem_api:1.0
+    ports:
+      - 55000:55000
+    depends_on:
+      - bd
+    networks:
+      - totem-network
+networks:
+  totem-network:
+volumes:
+  db-volume:
+
+  
+    
